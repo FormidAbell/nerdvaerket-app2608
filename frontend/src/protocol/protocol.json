@@ -1,0 +1,270 @@
+{
+  "version": "1.0.0",
+  "description": "LOY PLAY-paritet protocol definition",
+  "profiles": {
+    "uart": {
+      "serviceUUID": "49535343-fe7d-4ae5-8fa9-9fafd205e455",
+      "writeChar": "49535343-6daa-4d02-abf6-19569aca69fe",
+      "writeNoResponseChar": "49535343-8841-43f4-a8d4-ecbe34729bb3",
+      "notifyChar": "49535343-1e4d-4bd9-ba61-23c647249616"
+    },
+    "fallback": {
+      "serviceUUID": "0000fff0-0000-1000-8000-00805f9b34fb",
+      "writeChar": "0000fff2-0000-1000-8000-00805f9b34fb",
+      "notifyChar": "0000fff1-0000-1000-8000-00805f9b34fb"
+    }
+  },
+  "commands": {
+    "power": {
+      "on": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{brightness:02X}33C33C",
+        "params": {
+          "brightness": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Power on with brightness"
+      },
+      "off": {
+        "targetChar": "writeChar", 
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC2433C33C",
+        "params": {},
+        "terminator": "",
+        "crc": false,
+        "description": "Power off"
+      },
+      "toggle": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse", 
+        "payloadTemplate": "CC2533C33C",
+        "params": {},
+        "terminator": "",
+        "crc": false,
+        "description": "Toggle power state"
+      }
+    },
+    "brightness": {
+      "set": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{value:02X}33C33C", 
+        "params": {
+          "value": {"type": "uint8", "min": 0, "max": 100, "default": 50}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set brightness 0-100%"
+      }
+    },
+    "speed": {
+      "set": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{value:02X}33C33C",
+        "params": {
+          "value": {"type": "uint8", "min": 0, "max": 100, "default": 50}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set animation speed 0-100%"
+      }
+    },
+    "color": {
+      "rgb": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}33C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255}, 
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set RGB color"
+      },
+      "rgbw": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}{w:02X}33C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "w": {"type": "uint8", "min": 0, "max": 255, "default": 0}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set RGBW color"
+      },
+      "cct": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{kelvin:04X}{tint:02X}33C33C",
+        "params": {
+          "kelvin": {"type": "uint16", "min": 2700, "max": 6500, "default": 4000},
+          "tint": {"type": "int8", "min": -100, "max": 100, "default": 0}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set color temperature and tint"
+      }
+    },
+    "scene": {
+      "static": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}0133C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Static color scene"
+      },
+      "breathe": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}0233C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Breathing effect"
+      },
+      "strobe": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}0333C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Strobe effect"
+      },
+      "chase": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r:02X}{g:02X}{b:02X}0433C33C",
+        "params": {
+          "r": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "b": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Chase effect"
+      },
+      "rainbow": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC0505{speed:02X}33C33C",
+        "params": {
+          "speed": {"type": "uint8", "min": 1, "max": 100, "default": 50}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Rainbow effect"
+      },
+      "gradient": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{r1:02X}{g1:02X}{b1:02X}{r2:02X}{g2:02X}{b2:02X}0633C33C",
+        "params": {
+          "r1": {"type": "uint8", "min": 0, "max": 255, "default": 255},
+          "g1": {"type": "uint8", "min": 0, "max": 255, "default": 0},
+          "b1": {"type": "uint8", "min": 0, "max": 255, "default": 0},
+          "r2": {"type": "uint8", "min": 0, "max": 255, "default": 0},
+          "g2": {"type": "uint8", "min": 0, "max": 255, "default": 0},
+          "b2": {"type": "uint8", "min": 0, "max": 255, "default": 255}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Two-color gradient"
+      }
+    },
+    "music_mode": {
+      "fft": {
+        "targetChar": "writeNoResponseChar",
+        "writeMode": "withoutResponse",
+        "payloadTemplate": "CC{bands:02X}{gain:02X}{hold:02X}{decay:02X}0733C33C",
+        "params": {
+          "bands": {"type": "uint8", "min": 8, "max": 32, "default": 16},
+          "gain": {"type": "uint8", "min": 0, "max": 100, "default": 50},
+          "hold": {"type": "uint8", "min": 0, "max": 255, "default": 10},
+          "decay": {"type": "uint8", "min": 1, "max": 100, "default": 20}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Music FFT mode parameters"
+      }
+    },
+    "mic_mode": {
+      "threshold": {
+        "targetChar": "writeNoResponseChar",
+        "writeMode": "withoutResponse",
+        "payloadTemplate": "CC{threshold:02X}{smoothing:02X}0833C33C",
+        "params": {
+          "threshold": {"type": "uint8", "min": 0, "max": 100, "default": 30},
+          "smoothing": {"type": "uint8", "min": 0, "max": 100, "default": 50}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Microphone threshold and smoothing"
+      }
+    },
+    "segment": {
+      "set": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{start:02X}{end:02X}{direction:02X}0933C33C",
+        "params": {
+          "start": {"type": "uint8", "min": 0, "max": 255, "default": 0},
+          "end": {"type": "uint8", "min": 0, "max": 255, "default": 15},
+          "direction": {"type": "uint8", "min": 0, "max": 1, "default": 0}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set LED segment range and direction"
+      }
+    },
+    "device_cfg": {
+      "ic_type": {
+        "targetChar": "writeChar",
+        "writeMode": "withResponse",
+        "payloadTemplate": "CC{ic_type:02X}{pixel_count:02X}0A33C33C",
+        "params": {
+          "ic_type": {"type": "uint8", "min": 0, "max": 10, "default": 0},
+          "pixel_count": {"type": "uint8", "min": 1, "max": 255, "default": 16}
+        },
+        "terminator": "",
+        "crc": false,
+        "description": "Set IC type and pixel count"
+      }
+    }
+  },
+  "icTypes": {
+    "0": "WS2812B",
+    "1": "SK6812",
+    "2": "WS2813",
+    "3": "APA102",
+    "4": "SK9822",
+    "5": "WS2801",
+    "6": "TM1809",
+    "7": "TM1804",
+    "8": "UCS1903",
+    "9": "SM16703",
+    "10": "WS2811"
+  }
+}
